@@ -10,6 +10,11 @@ if (Get-Command py -ErrorAction SilentlyContinue) {
     throw "Python was not found. Install Python 3.10 or adjust build.ps1."
 }
 
+$pythonVersion = (& $pythonCommand @pythonArgs -c "import sys; print(f'{sys.version_info[0]}.{sys.version_info[1]}')").Trim()
+if ($LASTEXITCODE -ne 0 -or $pythonVersion -ne "3.10") {
+    throw "Python 3.10 is required, but '$pythonCommand' resolved to Python $pythonVersion. Install Python 3.10 or adjust build.ps1."
+}
+
 if (-not (Get-Command pdflatex -ErrorAction SilentlyContinue)) {
     throw "pdflatex was not found on PATH. Install a LaTeX distribution or add pdflatex to PATH."
 }
