@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "Citation metadata for the project and manuscript."
+title: "Median-Length Exact-Coverage Confidence Intervals for the Power of the One-Sample t-Test"
+version: 0.1.0
+date-released: 2026-04-20
+type: software
+authors:
+  - family-names: "Watts"
+    given-names: "Harrison"
+keywords:
+  - "statistics"
+  - "power analysis"
+  - "confidence intervals"
+  - "t-test"
+  - "reproducible research"
+license: "MIT AND CC-BY-4.0"
+abstract: "Reproducible numerical study of exact-coverage confidence intervals for the power of the one-sample t-test, comparing equal-tail, expected-length, deterministic median-length, and Monte Carlo median-approximation constructions."
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Watts"
+      given-names: "Harrison"
+  title: "Median-Length Exact-Coverage Confidence Intervals for the Power of the One-Sample t-Test"
+  year: 2026
+  note: "Manuscript included in repository as paper/paper.pdf."

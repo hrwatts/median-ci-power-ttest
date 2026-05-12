@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# LaTeX intermediate files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.nav
+*.out
+*.run.xml
+*.snm
+*.synctex.gz
+*.toc
+
+# Keep the compiled paper and generated manuscript artifacts.
+!paper/paper.pdf
+!figures/*.pdf
+!figures/*.png
+!results/*.csv
+!results/*.tex
