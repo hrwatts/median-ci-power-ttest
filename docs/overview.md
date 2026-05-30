@@ -10,7 +10,11 @@ The specific methodological question is:
 
 ## Statistical Setting
 
-Power depends on the unknown standard deviation, so post-data statements about power inherit uncertainty from estimating that quantity. The interval construction used here starts from a chi-squared pivot for the variance, converts it into a confidence interval for the standard deviation, and then maps that interval into a confidence interval for power.
+Power depends on the unknown standard deviation, so post-data statements about power inherit uncertainty from estimating that quantity. The analysis target is the one-sample upper-tailed test,
+
+`H0: mu = mu0` versus `H1: mu > mu0`,
+
+with a power interval for a pre-specified raw shift `Delta = mu - mu0`. The interval is written first in observable form using the realized sample standard deviation `S`, and only then re-indexed with `kappa = Delta / sigma` for scale-free design tabulation.
 
 The exact-coverage guarantee depends on one structural requirement: the chi-squared endpoint allocation must be fixed before the observed sample standard deviation is seen. If that allocation depends on the realized data, exact coverage can fail.
 
@@ -29,17 +33,19 @@ The median-length construction is theoretically coherent and empirically interpr
 
 ## Interpretation
 
-The exact-coverage statement is pointwise in a prespecified standardized shift:
+The exact-coverage statement is pointwise in a prespecified standardized shift index:
 
 `kappa = Delta / sigma`
 
-The guarantee applies when that standardized target is fixed in advance. The repository does not claim exact post hoc inference for a standardized effect selected from the observed data.
+Following Chakraborti et al., this is a scale-free design convention, not a claim that the observed-data analysis knows the true population standard deviation. The guarantee applies when endpoint allocation is fixed in advance; the repository does not claim exact post-hoc inference for data-adaptive allocation rules.
 
 ## Repository Structure
 
 - [paper/paper.tex](../paper/paper.tex): manuscript source
 - [paper/paper.pdf](../paper/paper.pdf): compiled manuscript
 - [scripts/median_power_ci.py](../scripts/median_power_ci.py): full numerical pipeline
+- [scripts/posthoc_allocation_failure_demo.py](../scripts/posthoc_allocation_failure_demo.py): cautionary failure demonstration for invalid post-hoc allocation
+- [revision_addendum.md](revision_addendum.md): manuscript-facing corrections for revision/public release
 - [results/](../results): generated tables and machine-readable summaries
 - [figures/](../figures): generated figures
 
