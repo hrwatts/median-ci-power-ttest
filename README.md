@@ -40,7 +40,6 @@ The answer is comparative rather than dramatic. A median-length criterion is coh
 - [results/](results): generated tables and machine-readable summaries
 - [figures/](figures): generated figures used by the manuscript and README
 - [docs/revision_addendum.md](docs/revision_addendum.md): manuscript-facing correction memo for revision/public release
-- [research/](research/): research extensions and ongoing investigations (theory, generalizations, expanded numerical studies, and literature synthesis)
 
 ## Reproducibility
 
@@ -68,7 +67,7 @@ The manuscript build also requires `pdflatex` and `bibtex` on `PATH`.
 powershell -ExecutionPolicy Bypass -File .\build.ps1
 ```
 
-This command regenerates the numerical outputs under `results/`, regenerates the figures under `figures/`, and rebuilds [paper/paper.pdf](paper/paper.pdf).
+This command regenerates the numerical outputs under `results/` (including [results/posthoc_allocation_demo.csv](results/posthoc_allocation_demo.csv)), regenerates the figures under `figures/`, and rebuilds [paper/paper.pdf](paper/paper.pdf).
 
 ## Generated Outputs
 

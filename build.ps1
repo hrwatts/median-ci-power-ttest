@@ -24,6 +24,7 @@ if (-not (Get-Command bibtex -ErrorAction SilentlyContinue)) {
 }
 
 & $pythonCommand @pythonArgs "scripts/median_power_ci.py"
+& $pythonCommand @pythonArgs "scripts/posthoc_allocation_failure_demo.py"
 Push-Location paper
 try {
     pdflatex -interaction=nonstopmode -halt-on-error paper.tex
