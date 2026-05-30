@@ -32,7 +32,7 @@ The power of Student's one-sample t-test depends on the unknown population stand
 
 The next natural step in that sequence is to replace the expected-length criterion with a \emph{median}-length criterion. That objective is attractive when the random interval length is highly asymmetric, since a mean can be heavily influenced by a relatively small set of long intervals. At the same time, modern statistical practice cautions against using post hoc power as a substitute for effect-size estimation or interval estimation \citep{hoenig2001abuse,greenland2016misinterpretations}. The present note therefore keeps the methodological target narrow: it studies the power function indexed by a prespecified standardized shift $\kappa=\Delta/\sigma$, treated as a design-stage quantity rather than estimated from the observed data. Under this interpretation, the paper does not claim exact post-data inference for a raw effect $\Delta$ with unknown standardization. Instead, it studies interval procedures whose exact-coverage statement holds pointwise for each fixed $\kappa$. Exact coverage fails if $\kappa$ or the allocation $p$ is chosen post hoc from the data.
 
-This note makes three contributions. First, it rewrites the power-interval construction in a scale-free form indexed by the standardized shift $\kappa=\Delta/\sigma$. Second, it defines the population median-length exact-coverage criterion and computes a deterministic numerical approximation to its optimizer. Third, it runs a reproducible numerical study that compares the resulting intervals with equal-tail and expected-length competitors on both mean and median length, uses a Monte Carlo approximation to the median objective as a computational sensitivity analysis, and validates coverage by Monte Carlo simulation across the full design grid. An important part of the empirical message is comparative rather than triumphant: even when the length distribution is skewed enough for mean and median width to differ materially, the classical expected-length rule is often already close to the median-length benchmark. In that sense, the paper is intended not only as a new criterion study but also as an exact finite-sample benchmark for a class of ``robust width'' questions.
+This note makes three contributions. First, it writes the power-interval construction in observable form using $(S,\Delta)$ before introducing the scale-free $\kappa$ index used for design tabulation. Second, it defines the population median-length exact-coverage criterion and computes a deterministic numerical approximation to its optimizer. Third, it runs a reproducible numerical study that compares the resulting intervals with equal-tail and expected-length competitors on both mean and median length, uses a Monte Carlo approximation to the median objective as a computational sensitivity analysis, and validates coverage by Monte Carlo simulation across the full design grid. An important part of the empirical message is comparative rather than triumphant: even when the length distribution is skewed enough for mean and median width to differ materially, the classical expected-length rule is often already close to the median-length benchmark. In that sense, the paper is intended not only as a new criterion study but also as an exact finite-sample benchmark for a class of ``robust width'' questions.
 
 \section{Exact-Coverage Power Intervals}
 Let $X_1,\dots,X_n$ be independent and identically distributed as $N(\mu,\sigma^2)$. We test
@@ -47,15 +47,14 @@ S^2=\frac{1}{n-1}\sum_{i=1}^{n}(X_i-\bar X)^2,
 \]
 and reject for $T>t_{1-\alpha,\nu}$, where $\nu=n-1$.
 
-If the true mean satisfies $\mu=\mu_0+\Delta$ with $\Delta>0$, then the power can be written as
+If the true mean satisfies $\mu=\mu_0+\Delta$ with $\Delta>0$, define
 \[
-\pi_{n,\alpha}(\kappa)
-=
-1-G_{\nu,\sqrt{n}\kappa}\!\left(t_{1-\alpha,\nu}\right),
-\qquad
-\kappa=\frac{\Delta}{\sigma},
+\pi_{n,\alpha}(x)=1-G_{\nu,\sqrt{n}x}\!\left(t_{1-\alpha,\nu}\right),
 \]
-where $G_{\nu,\delta}$ is the cumulative distribution function of the noncentral t distribution with $\nu$ degrees of freedom and noncentrality parameter $\delta$ \citep{tarasinska2005power}. Thus the power is determined by the standardized shift $\kappa$.
+where $G_{\nu,\delta}$ is the cumulative distribution function of the noncentral t distribution with $\nu$ degrees of freedom and noncentrality parameter $\delta$ \citep{tarasinska2005power}. Then power at raw shift $\Delta$ and scale $\sigma$ is
+\[
+\pi_{n,\alpha}\!\left(\frac{\Delta}{\sigma}\right).
+\]
 
 Now define the pivotal quantity
 \[
@@ -69,27 +68,34 @@ the induced confidence interval for $\sigma$ is
 \[
 \left[\sqrt{\frac{\nu S^2}{B}},\sqrt{\frac{\nu S^2}{A}}\right].
 \]
-Because $\pi_{n,\alpha}(\kappa)$ is decreasing in $\sigma$ for fixed $\Delta$, the corresponding interval for power is
+Because power decreases in $\sigma$ for fixed $\Delta>0$, the observable power interval is
 \[
-C_{A,B}(Q)
+C^{\mathrm{obs}}_{A,B}(S;\Delta)
 =
 \left[
-\pi_{n,\alpha}\!\left(\kappa\sqrt{\frac{A}{Q}}\right),
-\pi_{n,\alpha}\!\left(\kappa\sqrt{\frac{B}{Q}}\right)
+\pi_{n,\alpha}\!\left(\frac{\Delta}{S}\sqrt{\frac{A}{\nu}}\right),
+\pi_{n,\alpha}\!\left(\frac{\Delta}{S}\sqrt{\frac{B}{\nu}}\right)
 \right].
 \]
 
-\begin{proposition}
-For constants $A$ and $B$ chosen before observing $S$, with $\Pr(A\le Q\le B)=1-\gamma$, the interval $C_{A,B}(Q)$ has exact coverage:
+For design-stage analysis of random interval length, use $S/\sigma=\sqrt{Q/\nu}$ and the scale-free index $\kappa=\Delta/\sigma$ to rewrite the same random endpoints as
 \[
-\Pr\!\left\{\pi_{n,\alpha}(\kappa)\in C_{A,B}(Q)\right\}=1-\gamma.
+\pi_{n,\alpha}\!\left(\kappa\sqrt{\frac{A}{Q}}\right),
+\qquad
+\pi_{n,\alpha}\!\left(\kappa\sqrt{\frac{B}{Q}}\right).
+\]
+
+\begin{proposition}
+For constants $A$ and $B$ chosen before observing $S$, with $\Pr(A\le Q\le B)=1-\gamma$, the interval $C^{\mathrm{obs}}_{A,B}(S;\Delta)$ has exact coverage:
+\[
+\Pr\!\left\{\pi_{n,\alpha}(\Delta/\sigma)\in C^{\mathrm{obs}}_{A,B}(S;\Delta)\right\}=1-\gamma.
 \]
 \end{proposition}
 
 \begin{proof}
 The map $\sigma \mapsto \pi_{n,\alpha}(\Delta/\sigma)$ is monotone decreasing. Therefore
 \[
-\pi_{n,\alpha}(\kappa)\in C_{A,B}(Q)
+\pi_{n,\alpha}(\Delta/\sigma)\in C^{\mathrm{obs}}_{A,B}(S;\Delta)
 \iff
 \sqrt{\frac{\nu S^2}{B}}\le \sigma \le \sqrt{\frac{\nu S^2}{A}}
 \iff
@@ -98,7 +104,7 @@ A\le Q\le B.
 Taking probabilities yields $1-\gamma$.
 \end{proof}
 
-\noindent\textit{Remark.} The monotone transformation through $\sigma$ is a construction device; the resulting coverage statement is pointwise in the fixed index~$\kappa$. Exact coverage therefore holds for each prespecified standardized alternative~$\kappa$. It does not automatically hold if $\kappa$, or equivalently the allocation~$p$, is estimated or selected from the observed data, because $A$ and $B$ would then depend on $S$ and the chain of equivalences in the proof would no longer go through exactly. Practitioners who wish to use this interval should fix $\kappa$ at the design stage and not revise it in light of the observed sample standard deviation.
+\noindent\textit{Remark.} Following Chakraborti et al., the numerical design problem is indexed by a standardized shift. This is a scale-free tabulation convention, not an assumption that the population standard deviation is known in the data analysis. The endpoint allocation is fixed before observing the sample standard deviation. Exact coverage is pointwise in each fixed $\kappa$, and it fails if $\kappa$ or the allocation $p$ is selected after observing $S$.
 
 \noindent Following Chakraborti et al.\ \citep{chakraborti2012shortest}, it is convenient to parameterize admissible intervals by the left-tail probability
 \[
@@ -119,6 +125,8 @@ The random interval length becomes
 \pi_{n,\alpha}\!\left(\kappa\sqrt{\frac{A_p}{Q}}\right).
 \]
 This expression depends on the problem only through $(n,\alpha,\gamma,\kappa)$, so the resulting tables are scale free.
+
+The fixed-endpoint architecture is unchanged from \citet{chakraborti2012shortest}: choose a fixed allocation $p$, map to fixed chi-square endpoints $(A_p,B_p)$, obtain exact coverage, then optimize a length functional over the pivot randomness. The sole methodological change in this note is replacing the expected-length criterion with a median-length criterion.
 
 The admissible range $0\le p\le\gamma$ has natural boundary interpretations. At $p=0$, $A_0=0$, giving a chi-squared interval for $\sigma$ with no finite lower bound and a one-sided lower power interval. At $p=\gamma$, $B_\gamma = F_{\chi^2_\nu}^{-1}(1)=\infty$, giving a power interval of the form $[\pi_{n,\alpha}(\kappa\sqrt{A_\gamma/Q}),\,1]$ with the upper endpoint fixed at~1. Because $B_\gamma$ is not a finite real number, the numerical search below is conducted over a compact subinterval of $(0,\gamma)$ with small tolerances at each boundary, and the limiting one-sided constructions at the endpoints are understood as excluded limits.
 
@@ -159,7 +167,7 @@ and the grid of standardized shifts is
 \[
 \kappa\in\{0.25,0.50,0.75,1.00,1.25\}.
 \]
-For each $(n,\kappa)$ pair, the deterministic objective functions were evaluated on a grid of 4{,}001 midpoint chi-squared quantiles and optimized over a compact subinterval of $(0,\gamma)$ by one-dimensional bounded search with absolute tolerance $10^{-6}$ on $p$. The simulation-based median approximation used a fixed common-random-numbers sample of size $R=4{,}000$ from $\chi^2_\nu$ for each $n$, with the sample held fixed during the optimization so that the objective remained reproducible across candidate allocations. Because the sample median objective is nonsmooth and can be locally flat, the resulting Monte Carlo optimizer should be interpreted as a sensitivity analysis for the deterministic solution rather than as an independent optimality theory. Because the interval depends on the data only through $Q$, the Monte Carlo validation simulates $Q\sim\chi^2_\nu$ directly rather than regenerating the full normal sample each time. The script \texttt{scripts/median\_power\_ci.py} reproduces every table and figure in the paper.
+For each $(n,\kappa)$ pair, the deterministic objective functions were evaluated on a grid of 4{,}001 midpoint chi-squared quantiles and optimized over a compact subinterval of $(0,\gamma)$ by one-dimensional bounded search with absolute tolerance $10^{-6}$ on $p$. The simulation-based median approximation used a fixed common-random-numbers sample of size $R=4{,}000$ from $\chi^2_\nu$ for each $n$, with the sample held fixed during the optimization so that the objective remained reproducible across candidate allocations. Because the sample median objective is nonsmooth and can be locally flat, the resulting Monte Carlo optimizer should be interpreted as a sensitivity analysis for the deterministic solution rather than as an independent optimality theory. The implementation classifies boundary behavior using relative thresholds (lower if $p\le 0.01\gamma$, upper if $p\ge 0.99\gamma$, interior otherwise). For near-flat median objectives, a deterministic tie-break selects the smallest near-minimizing allocation on a fixed grid. Because the interval depends on the data only through $Q$, the Monte Carlo validation simulates $Q\sim\chi^2_\nu$ directly rather than regenerating the full normal sample each time. The script \texttt{scripts/median\_power\_ci.py} reproduces every table and figure in the paper.
 
 \subsection{Main results}
 Classical statistical writing often reports the full design grid, and that format is also useful here because the boundary behavior of the optimization is itself part of the numerical story. Accordingly, Tables~\ref{tab:optima} and \ref{tab:lengths} display the complete $25$-point grid for the principal summaries.
@@ -222,6 +230,8 @@ Although coverage is exact by Proposition~1, the implementation should still be 
 \resizebox{0.9\textwidth}{!}{\input{../results/table_monte_carlo.tex}}
 \end{table}
 
+As a defensive software check, the repository also includes \texttt{scripts/posthoc\_allocation\_failure\_demo.py}, which applies an invalid data-adaptive rule that selects $p$ after observing $S$. The script reports empirical coverage for that post-hoc rule alongside a valid fixed-allocation baseline and is included only to demonstrate why post-hoc allocation is not exact-coverage inference.
+
 \section{Discussion}
 The median-length interval studied here is a coherent extension of the exact-coverage expected-length interval of \citet{chakraborti2012shortest}. Its main value is interpretive rather than dramatic numerical superiority: it targets the typical realized interval width, which can differ materially from the mean width in finite samples. On the numerical grid studied here, the median-length interval modestly improves the median width relative to the expected-length interval and can substantially improve on equal-tail intervals. That combination of findings is not contradictory. Rather, it shows that a meaningful distinction between average and typical width can coexist with near-optimality of the expected-length rule under the alternative median criterion. The added Monte Carlo approximation reinforces that conclusion rather than changing it: once the pivot reduction is exploited, a deterministic grid already captures the relevant one-dimensional distribution with high stability, and the simulation-based version mainly serves as a robustness check and as a bridge to practitioners who prefer simulation-based workflows.
 
@@ -231,7 +241,9 @@ The simulation-based approximation should not, however, be over-interpreted. Its
 
 Several extensions remain open. The present note treats only the one-sample upper-tailed t-test and fixed $(\alpha,\gamma)=(0.05,0.05)$. It would be natural to revisit two-sided tests, two-sample t procedures, or other robust summaries of random interval width. It would also be useful to complement the present numerical optimization with theory on uniqueness, boundary behavior, or convergence of the median-length allocation as the design grid is refined.
 
-The method developed here should also be understood within the context of recent debates about the role of power in statistical practice. Work by \citet{ginersorolla2024power} emphasizes that power analysis is meaningful only relative to a defensible target effect, while \citet{riesthuis2024power} shows how confidence-interval ideas can be embedded in prospective simulation workflows for minimum-effect and equivalence testing. More broadly, \citet{irmer2024mspe} develops model-implied simulation-based power estimation for settings far beyond the simple t-test. These approaches address design-stage questions that are conceptually distinct from the object studied here, but they also clarify its role. The present method is indexed by a prespecified standardized alternative and its exact-coverage claim is pointwise in that index; it is not a replacement for prospective power planning or for post-data effect estimation. Its more modest role is to provide an exact low-dimensional finite-sample benchmark for how power intervals behave once a standardized target has already been fixed, thereby complementing modern simulation-based and design-oriented workflows rather than competing with them.
+The method developed here should also be understood alongside competing approaches that build confidence intervals for noncentrality parameters directly. The transformed-$\sigma$ architecture used here is chosen deliberately for a narrow finite-sample target: fixed raw shift $\Delta$, unknown $\sigma$, fixed endpoint allocation, and exact pivot-based coverage. Noncentrality-parameter approaches are adjacent comparison work rather than part of the core inferential claim of this note.
+
+The present method is indexed by a prespecified standardized alternative and its exact-coverage claim is pointwise in that index; it is not a replacement for prospective power planning or for post-data effect estimation. Its more modest role is to provide an exact low-dimensional finite-sample benchmark for how power intervals behave once a standardized target has already been fixed.
 
 \bibliographystyle{plainnat}
 \bibliography{paper}

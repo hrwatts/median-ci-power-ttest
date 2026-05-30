@@ -15,6 +15,7 @@ from scipy import optimize, stats
 
 ALPHA = 0.05
 GAMMA = 0.05
+BOUNDARY_REL_THRESHOLD = 0.01
 GRID_SIZE = 4001
 MC_REPS = 100_000
 RNG_SEED = 20260420
@@ -100,6 +101,16 @@ def interval_spec(n: int, left_tail: float) -> IntervalSpec:
     )
 
 
+def classify_allocation(left_tail: float) -> str:
+    lower_cut = BOUNDARY_REL_THRESHOLD * GAMMA
+    upper_cut = (1.0 - BOUNDARY_REL_THRESHOLD) * GAMMA
+    if left_tail <= lower_cut:
+        return "lower boundary"
+    if left_tail >= upper_cut:
+        return "upper boundary"
+    return "interior"
+
+
 def optimize_interval(n: int, kappa: float, objective: str) -> IntervalSpec:
     x_grid = evaluation_grid(n)
 
@@ -118,10 +129,23 @@ def optimize_interval(n: int, kappa: float, objective: str) -> IntervalSpec:
         method="bounded",
         options={"xatol": 1e-6},
     )
-    spec = interval_spec(n, float(result.x))
+    best_left_tail = float(result.x)
+
+    # Deterministic tie-break for potentially flat median objectives:
+    # choose the smallest near-minimizer on a fixed grid.
+    if objective == "median":
+        tie_grid = np.linspace(1e-10, GAMMA - 1e-8, 401)
+        tie_values = np.array([objective_fn(float(p)) for p in tie_grid])
+        min_value = min(float(result.fun), float(np.min(tie_values)))
+        tie_tol = max(1e-10, 1e-6 * abs(min_value))
+        near_min = tie_grid[tie_values <= (min_value + tie_tol)]
+        if near_min.size > 0:
+            best_left_tail = float(np.min(near_min))
+
+    spec = interval_spec(n, best_left_tail)
     return IntervalSpec(
         method=objective,
-        left_tail=float(result.x),
+        left_tail=best_left_tail,
         A=spec.A,
         B=spec.B,
     )
@@ -181,7 +205,7 @@ def summarize_case(n: int, kappa: float, x_mc_opt: np.ndarray) -> tuple[list[dic
         mean_length = float(np.mean(lengths))
         median_length = float(np.median(lengths))
         p90_length = float(np.quantile(lengths, 0.90))
-        mean_to_median = mean_length / median_length
+        mean_to_median = mean_length / median_length if median_length > 0 else float("nan")
 
         performance_rows.append(
             {
@@ -206,34 +230,37 @@ def summarize_case(n: int, kappa: float, x_mc_opt: np.ndarray) -> tuple[list[dic
         if label == "Expected-opt":
             expected_median = median_length
             summary_row["left_tail_expected"] = spec.left_tail
+            summary_row["boundary_class_expected"] = classify_allocation(spec.left_tail)
             summary_row["mean_expected"] = mean_length
             summary_row["median_expected"] = median_length
             summary_row["ratio_expected"] = mean_to_median
         if label == "Median-opt":
             summary_row["left_tail_median"] = spec.left_tail
+            summary_row["boundary_class_median"] = classify_allocation(spec.left_tail)
             summary_row["mean_median"] = mean_length
             summary_row["median_median"] = median_length
         if label == "Median-MC":
             summary_row["left_tail_median_mc"] = spec.left_tail
+            summary_row["boundary_class_median_mc"] = classify_allocation(spec.left_tail)
             summary_row["mean_median_mc"] = mean_length
             summary_row["median_median_mc"] = median_length
 
     assert baseline_median is not None
     assert expected_median is not None
     summary_row["median_gain_vs_equal_tail_pct"] = (
-        100.0
-        * (baseline_median - summary_row["median_median"])
-        / baseline_median
+        100.0 * (baseline_median - summary_row["median_median"]) / baseline_median
+        if baseline_median > 0
+        else float("nan")
     )
     summary_row["median_gain_vs_expected_pct"] = (
-        100.0
-        * (expected_median - summary_row["median_median"])
-        / expected_median
+        100.0 * (expected_median - summary_row["median_median"]) / expected_median
+        if expected_median > 0
+        else float("nan")
     )
     summary_row["median_gain_mc_vs_expected_pct"] = (
-        100.0
-        * (expected_median - summary_row["median_median_mc"])
-        / expected_median
+        100.0 * (expected_median - summary_row["median_median_mc"]) / expected_median
+        if expected_median > 0
+        else float("nan")
     )
     summary_row["left_tail_shift_pct_points"] = 100.0 * (
         summary_row["left_tail_expected"] - summary_row["left_tail_median"]

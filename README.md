@@ -20,9 +20,14 @@ The answer is comparative rather than dramatic. A median-length criterion is coh
 
 ## Scope
 
+- The inferential target is the one-sample upper-tailed test: `H0: mu = mu0` versus `H1: mu > mu0`.
+- The reported power interval is for a pre-specified raw shift `Delta = mu - mu0`, written in observable form using the observed sample standard deviation `S`.
 - The exact-coverage statement is pointwise in a prespecified standardized shift `kappa = Delta / sigma`.
-- The target is design-stage inference for a fixed standardized alternative, not post hoc standardization from the observed data.
+- Following Chakraborti et al., `kappa` is used as a scale-free design index for tabulation, not as a post-data observed effect size.
+- The endpoint allocation is fixed before observing `S`; post-hoc allocation rules are invalid for exact coverage.
 - The Monte Carlo component is included as a numerical sensitivity analysis and implementation check, not as a separate inferential construction.
+- Boundary diagnostics classify allocations relative to `gamma`: lower if `p <= 0.01 * gamma`, upper if `p >= 0.99 * gamma`, otherwise interior.
+- For flat numerical median objectives, the implementation uses a deterministic tie-break: choose the smallest near-minimizing allocation on a fixed grid.
 
 ## Repository Contents
 
@@ -31,8 +36,10 @@ The answer is comparative rather than dramatic. A median-length criterion is coh
 - [paper/paper.bib](paper/paper.bib): bibliography database
 - [docs/overview.md](docs/overview.md): concise project overview
 - [scripts/median_power_ci.py](scripts/median_power_ci.py): end-to-end numerical pipeline
+- [scripts/posthoc_allocation_failure_demo.py](scripts/posthoc_allocation_failure_demo.py): cautionary post-hoc allocation failure demonstration
 - [results/](results): generated tables and machine-readable summaries
 - [figures/](figures): generated figures used by the manuscript and README
+- [docs/revision_addendum.md](docs/revision_addendum.md): manuscript-facing correction memo for revision/public release
 
 ## Reproducibility
 
@@ -60,7 +67,7 @@ The manuscript build also requires `pdflatex` and `bibtex` on `PATH`.
 powershell -ExecutionPolicy Bypass -File .\build.ps1
 ```
 
-This command regenerates the numerical outputs under `results/`, regenerates the figures under `figures/`, and rebuilds [paper/paper.pdf](paper/paper.pdf).
+This command regenerates the numerical outputs under `results/` (including [results/posthoc_allocation_demo.csv](results/posthoc_allocation_demo.csv)), regenerates the figures under `figures/`, and rebuilds [paper/paper.pdf](paper/paper.pdf).
 
 ## Generated Outputs
 
@@ -68,6 +75,7 @@ This command regenerates the numerical outputs under `results/`, regenerates the
 - [results/summary_grid.csv](results/summary_grid.csv): compact design-grid comparison summary
 - [results/monte_carlo_validation.csv](results/monte_carlo_validation.csv): Monte Carlo coverage validation
 - [results/mc_sensitivity.csv](results/mc_sensitivity.csv): sensitivity study for the Monte Carlo median approximation
+- [results/posthoc_allocation_demo.csv](results/posthoc_allocation_demo.csv): empirical cautionary check for invalid post-hoc allocation
 - [figures/length_distribution.pdf](figures/length_distribution.pdf): representative interval-length distributions
 - [figures/heatmaps.pdf](figures/heatmaps.pdf): grid-level summaries
 

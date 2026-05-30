@@ -41,3 +41,7 @@ Thumbs.db
 !figures/*.png
 !results/*.csv
 !results/*.tex
+
+# Legacy private drafting notes excluded from public release.
+resources/tex/med_abstract.tex
+resources/tex/shortest_review.tex
