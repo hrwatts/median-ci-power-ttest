@@ -45,7 +45,6 @@ Following Chakraborti et al., this is a scale-free design convention, not a clai
 - [paper/paper.pdf](../paper/paper.pdf): compiled manuscript
 - [scripts/median_power_ci.py](../scripts/median_power_ci.py): full numerical pipeline
 - [scripts/posthoc_allocation_failure_demo.py](../scripts/posthoc_allocation_failure_demo.py): cautionary failure demonstration for invalid post-hoc allocation
-- [revision_addendum.md](revision_addendum.md): manuscript-facing corrections for revision/public release
 - [results/](../results): generated tables and machine-readable summaries
 - [figures/](../figures): generated figures
 
