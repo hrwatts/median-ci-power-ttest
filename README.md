@@ -39,7 +39,6 @@ The answer is comparative rather than dramatic. A median-length criterion is coh
 - [scripts/posthoc_allocation_failure_demo.py](scripts/posthoc_allocation_failure_demo.py): cautionary post-hoc allocation failure demonstration
 - [results/](results): generated tables and machine-readable summaries
 - [figures/](figures): generated figures used by the manuscript and README
-- [docs/revision_addendum.md](docs/revision_addendum.md): manuscript-facing correction memo for revision/public release
 
 ## Reproducibility
 
